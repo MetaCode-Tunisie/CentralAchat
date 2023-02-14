@@ -29,6 +29,6 @@ public class Delivery implements Serializable {
     @OneToOne
     Reciept reciept;
     @OneToMany(mappedBy = "delivery")
-    Set<Orderrr> orders=new HashSet<>();
+    Set<Orders> orders=new HashSet<>();
 
 }

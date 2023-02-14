@@ -9,28 +9,26 @@ import lombok.experimental.FieldDefaults;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
 @Setter
 @ToString
 @FieldDefaults(level= AccessLevel.PRIVATE)
-public class Cart implements Serializable {
-
+public class Orders implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) @Setter(AccessLevel.NONE)
-    Long idCart;
-    int quantity;
+    Long idOrder;
     @Temporal(TemporalType.DATE)
-    Date dateCreation;
-    Boolean valid;
+    Date orderDate;
+    float totalPrice;
+    Boolean deliveryOption;
+
+    @OneToMany(mappedBy = "order")
+    Set<Cart> carts =new HashSet<>();
 
     @ManyToOne
-    Account account;
-
-    @ManyToOne
-    Product product;
-
-    @ManyToOne
-    Orders order;
+    Delivery delivery;
 }
