@@ -6,19 +6,22 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
 @Setter
 @ToString
 @FieldDefaults(level= AccessLevel.PRIVATE)
-public class Delivery implements Serializable {
+public class Unit implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) @Setter(AccessLevel.NONE)
-    Long idAccount;
+    Long idUnit;
+    String name;
+
+    @OneToMany(mappedBy = "unit")
+    Set<Product> products=new HashSet<>();
 }

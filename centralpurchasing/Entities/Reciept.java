@@ -6,10 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
@@ -17,8 +14,12 @@ import java.io.Serializable;
 @Setter
 @ToString
 @FieldDefaults(level= AccessLevel.PRIVATE)
-public class Product implements Serializable {
+public class Reciept implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) @Setter(AccessLevel.NONE)
-    Long idAccount;
+    Long idReciept;
+    Boolean status;
+
+    @OneToOne(mappedBy = "reciept")
+    Delivery delivery;
 }

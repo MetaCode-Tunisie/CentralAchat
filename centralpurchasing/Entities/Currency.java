@@ -6,19 +6,23 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
 @Setter
 @ToString
 @FieldDefaults(level= AccessLevel.PRIVATE)
-public class Reciept implements Serializable {
+public class Currency implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) @Setter(AccessLevel.NONE)
-    Long idAccount;
+    Long idCurrency;
+    String name;
+    float rate;
+
+    @OneToMany(mappedBy = "currency")
+    Set<Account> accounts=new HashSet<>();
 }

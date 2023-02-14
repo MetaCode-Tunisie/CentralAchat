@@ -6,19 +6,31 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 @Entity
 @Getter
 @Setter
 @ToString
 @FieldDefaults(level= AccessLevel.PRIVATE)
-public class Currency implements Serializable {
+public class Cart implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) @Setter(AccessLevel.NONE)
-    Long idAccount;
+    Long idCart;
+    int quantity;
+    @Temporal(TemporalType.DATE)
+    Date dateCreation;
+    Boolean valid;
+
+    @ManyToOne
+    Account account;
+
+    @ManyToOne
+    Product product;
+
+    @ManyToOne
+    Orderrr order;
 }
