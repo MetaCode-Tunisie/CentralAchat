@@ -1,6 +1,5 @@
 package tn.esprit.centralpurchasing.Entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,24 +8,29 @@ import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
-
+import java.util.Date;
 
 @Entity
 @Getter
 @Setter
 @ToString
 @FieldDefaults(level= AccessLevel.PRIVATE)
-public class Role implements Serializable {
+public class Cart implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) @Setter(AccessLevel.NONE)
-    Long idRole;
-    TypeRole typeRole;
+    Long idCart;
+    int quantity;
+    @Temporal(TemporalType.DATE)
+    Date dateCreation;
+    Boolean valid;
 
-    @ManyToMany(mappedBy = "roles")
-    Set<Account> accounts = new HashSet<>();
+    @ManyToOne
+    Account account;
 
+    @ManyToOne
+    Product product;
 
-
+    @ManyToOne
+    Orders order;
 }

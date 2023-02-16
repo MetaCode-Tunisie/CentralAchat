@@ -1,5 +1,6 @@
 package tn.esprit.centralpurchasing.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,6 +10,7 @@ import lombok.experimental.FieldDefaults;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -35,7 +37,49 @@ public class Account implements Serializable {
     Boolean isCredentialsNonExpired=true;
     Boolean isEnabled=true;
 
-    @ManyToMany(mappedBy = "accounts")
-    Set <Role> roles;
+
+    @JsonIgnore @ManyToOne
+    Account anyaccount_to_admin;
+
+/*
+    @JsonIgnore @ManyToOne
+    Account operators_to_admin;
+
+    @JsonIgnore @ManyToOne
+    Account suppliers_to_admin ;
+ */
+
+
+
+    @JsonIgnore @ManyToOne
+    Account suppliers_to_operator;
+
+    @JsonIgnore @ManyToMany
+    Set<Account> suppliers_buyers;
+
+    @JsonIgnore @ManyToMany
+    Set <Role> roles= new HashSet<>();
+
+    @JsonIgnore @OneToMany
+    Set<Orders> orders=new HashSet<>();
+
+    @JsonIgnore
+
+    @OneToMany(mappedBy = "account")
+    Set<Cart> carts=new HashSet<>();
+
+    @JsonIgnore
+
+    @ManyToOne
+    Currency currency;
+
+    @JsonIgnore
+
+    @OneToMany(mappedBy = "account")
+    Set<Product> products=new HashSet<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "account")
+    Set<RequestForProposal> requestForProposals =new HashSet<>();
 
 }
