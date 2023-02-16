@@ -25,10 +25,11 @@ public class Orders implements Serializable {
     Date orderDate;
     float totalPrice;
     Boolean deliveryOption;
+    Boolean payment;
 
     @OneToMany(mappedBy = "order")
     Set<Cart> carts =new HashSet<>();
 
-    @ManyToOne
+    @OneToOne(mappedBy = "orders")
     Delivery delivery;
 }

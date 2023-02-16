@@ -1,5 +1,6 @@
 package tn.esprit.centralpurchasing.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,6 +21,7 @@ public class Reciept implements Serializable {
     Long idReciept;
     Boolean status;
 
-    @OneToOne(mappedBy = "reciept")
+    @JsonIgnore
+    @OneToOne
     Delivery delivery;
 }
