@@ -8,6 +8,7 @@ import tn.esprit.centralpurchasing.Repository.CategoryRepository;
 import tn.esprit.centralpurchasing.Repository.ProductRepository;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -22,5 +23,10 @@ CategoryRepository categoryRepository;
                 .orElseThrow(() -> new EntityNotFoundException("Catégory not found"));
         product.setCategory(category);
         return productRepository.save(product);
+    }
+
+    @Override
+    public List<Product> retrieveAllProducts() {
+        return this.productRepository.findAll();
     }
 }
