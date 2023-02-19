@@ -13,7 +13,7 @@ public class ProductController {
     IServiceProduct serviceProduct;
     @PostMapping("/addProductAndCategory")
     public Product addProduct(@RequestBody Product product, @RequestParam Long idCategory, @RequestParam Long idLocation){
-        return serviceProduct.AddProductAndCategoryAndLocation(product,idCategory,idLocation);
+        return null;
 
     }
     @GetMapping("/displayProducts")

@@ -5,8 +5,10 @@ import org.springframework.stereotype.Service;
 import tn.esprit.centralpurchasing.Entities.Category;
 import tn.esprit.centralpurchasing.Entities.Location;
 import tn.esprit.centralpurchasing.Entities.Product;
+import tn.esprit.centralpurchasing.Entities.ProductPhoto;
 import tn.esprit.centralpurchasing.Repository.CategoryRepository;
 import tn.esprit.centralpurchasing.Repository.LocationRepository;
+import tn.esprit.centralpurchasing.Repository.ProductPhotoRepository;
 import tn.esprit.centralpurchasing.Repository.ProductRepository;
 
 import javax.persistence.EntityNotFoundException;
@@ -18,6 +20,7 @@ public class ServiceProduct implements IServiceProduct {
 ProductRepository productRepository;
 CategoryRepository categoryRepository;
 LocationRepository locationRepository;
+ProductPhotoRepository productPhotoRepository;
 
 
 
@@ -43,17 +46,11 @@ LocationRepository locationRepository;
        // return product;
 
     @Override
-    public Product AddProductAndCategoryAndLocation(Product product, Long idCategory , Long idLocation) {
+    public Product AddProductAndCategoryAndLocationAndPhoto(Product product, Long idCategory , Long idLocation , Long idProductPhoto) {
         Category category = categoryRepository.findById(idCategory).orElse(null);
         Location location = locationRepository.findById(idLocation).orElse(null);
-        Product product1 = new Product();
-        product1.setName(product.getName());
-        product1.setDescription(product.getDescription());
-        product1.setStatus(product.getStatus());
-        product1.setQuantity(product.getQuantity());
-        product1.setUnitValue(product.getUnitValue());
-        productRepository.save(product1);
-        return product1;
+        ProductPhoto productPhoto = productPhotoRepository.findById(idProductPhoto).orElse(null);
+return null;
     }
 
     @Override

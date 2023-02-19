@@ -5,7 +5,7 @@ import tn.esprit.centralpurchasing.Entities.Product;
 import java.util.List;
 
 public interface IServiceProduct {
-    public Product AddProductAndCategoryAndLocation(Product product, Long idCategory ,Long idLocation);
+    public Product AddProductAndCategoryAndLocationAndPhoto(Product product, Long idCategory ,Long idLocation,Long idProductPhoto);
     public List<Product> retrieveAllProducts();
     void deleteProduct(Long idProduct);
     public void updateProduct(Long idProduct, String Name);
