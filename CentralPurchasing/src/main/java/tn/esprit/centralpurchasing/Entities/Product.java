@@ -9,6 +9,7 @@ import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,23 +24,24 @@ public class Product implements Serializable {
     Long idProduct;
     String name;
     String description;
+    BigDecimal price;
     @Enumerated(EnumType.STRING)
      status status ;
     int quantity;
     String unitValue;
-
+    @JsonIgnore
     @ManyToOne
     Account account;
-
+    @JsonIgnore
     @ManyToOne
     Location location;
-
+    @JsonIgnore
     @ManyToOne
     Unit unit;
-
+    @JsonIgnore
     @ManyToOne
     Category category;
-
+@JsonIgnore
     @OneToMany(mappedBy = "product")
     Set<ProductPhoto> productPhotos=new HashSet<>();
 

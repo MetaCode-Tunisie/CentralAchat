@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+import org.apache.commons.lang3.builder.ToStringExclude;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -19,7 +20,9 @@ import java.util.Set;
 public class Unit implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) @Setter(AccessLevel.NONE)
+
     Long idUnit;
+
     String name;
 
     @OneToMany(mappedBy = "unit")

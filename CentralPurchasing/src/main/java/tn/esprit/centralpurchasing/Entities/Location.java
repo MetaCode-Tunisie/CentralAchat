@@ -20,6 +20,7 @@ public class Location implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) @Setter(AccessLevel.NONE)
     Long idLocation;
+
     String Address;
 
     @OneToMany(mappedBy = "location")

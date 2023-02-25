@@ -1,15 +1,10 @@
 package tn.esprit.centralpurchasing.Services;
 
 import lombok.AllArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import tn.esprit.centralpurchasing.Entities.Category;
-import tn.esprit.centralpurchasing.Entities.Location;
-import tn.esprit.centralpurchasing.Entities.Product;
-import tn.esprit.centralpurchasing.Entities.ProductPhoto;
-import tn.esprit.centralpurchasing.Repository.CategoryRepository;
-import tn.esprit.centralpurchasing.Repository.LocationRepository;
-import tn.esprit.centralpurchasing.Repository.ProductPhotoRepository;
-import tn.esprit.centralpurchasing.Repository.ProductRepository;
+import tn.esprit.centralpurchasing.Entities.*;
+import tn.esprit.centralpurchasing.Repository.*;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
@@ -21,7 +16,7 @@ ProductRepository productRepository;
 CategoryRepository categoryRepository;
 LocationRepository locationRepository;
 ProductPhotoRepository productPhotoRepository;
-
+UnitRepository unitRepository;
 
 
   //  public Etudiant addAndAssignEtudiantToEquipeAndContract(Etudiant e, Integer idContrat, Integer idEquipe) {
@@ -45,12 +40,26 @@ ProductPhotoRepository productPhotoRepository;
 
        // return product;
 
+
+
+
     @Override
-    public Product AddProductAndCategoryAndLocationAndPhoto(Product product, Long idCategory , Long idLocation , Long idProductPhoto) {
-        Category category = categoryRepository.findById(idCategory).orElse(null);
-        Location location = locationRepository.findById(idLocation).orElse(null);
-        ProductPhoto productPhoto = productPhotoRepository.findById(idProductPhoto).orElse(null);
-return null;
+    public Product addProductWithCategoryAndLocation(Long categoryId, Long locationId, Product product,Long idUnit) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new EntityNotFoundException("Category with id " + categoryId + " not found"));
+        Location location = locationRepository.findById(locationId)
+                .orElseThrow(() -> new EntityNotFoundException("Location with id " + locationId + " not found"));
+        Unit unit = unitRepository.findById(idUnit)
+                .orElseThrow(() -> new EntityNotFoundException("Unit with id " + idUnit + " not found"));
+        //System.out.println("***************    HELLOO   *****************");
+        product.setCategory(category);
+        //System.out.println("***************    Set Category Done   *****************");
+        product.setLocation(location);
+        //System.out.println("***************    Set Location Done   *****************");
+
+       // System.out.println("Unite :"+unit);
+        product.setUnit(unit);
+        return productRepository.save(product);
     }
 
     @Override
