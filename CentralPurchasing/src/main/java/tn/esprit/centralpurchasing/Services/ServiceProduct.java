@@ -1,13 +1,19 @@
 package tn.esprit.centralpurchasing.Services;
 
+import ch.qos.logback.core.status.Status;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import tn.esprit.centralpurchasing.Entities.*;
 import tn.esprit.centralpurchasing.Repository.*;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Predicate;
 
 @Service
 @AllArgsConstructor
@@ -19,29 +25,11 @@ ProductPhotoRepository productPhotoRepository;
 UnitRepository unitRepository;
 
 
-  //  public Etudiant addAndAssignEtudiantToEquipeAndContract(Etudiant e, Integer idContrat, Integer idEquipe) {
-     //   EtudiantRepository.save(e);
-      //  e.getEquipes().add(equipeRepository.findById(idEquipe).orElse(null));
-      //  contratRepository.findById(idContrat).orElse(null).setEtudiants(e);
-      //  EtudiantRepository.save(e);
-      //  contratRepository.save(contratRepository.findById(idContrat).orElse(null));
-       // return e;
-    //******************************************
- // Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException("Category not found"));
-   // Location location = locationRepository.findById(locationId).orElseThrow(() -> new ResourceNotFoundException("Location not found"));
-
-   // Product product = new Product();
-        //product.setName(name);
-       // product.setPrice(price);
-       // product.setCategory(category);
-       // product.setLocation(location);
-
-       // productRepository.save(product);
-
-       // return product;
-
-
-
+    @Override
+    public List<Product> searchProducts(String name, String adress, Double minPrice, Double maxPrice) {
+        return productRepository.findBynameContainingAndAdressContainingAndPriceBetween(
+                name, adress, minPrice, maxPrice);
+    }
 
     @Override
     public Product addProductWithCategoryAndLocation(Long categoryId, Long locationId, Product product,Long idUnit) {
@@ -78,4 +66,29 @@ Product product =productRepository.findById(idProduct).get();
 product.setName(Name);
 productRepository.save(product);
     }
+
+    @Override
+    public Map<String, Long> getProductCountsByStatus() {
+        List<Object[]> counts = productRepository.countProductsByStatus();
+        Map<String, Long> result = new HashMap<>();
+        for (Object[] row : counts) {
+            String status = row[0].toString();
+            Long count = (Long) row[1];
+            result.put(status, count);
+        }
+        return result;
+    }
+
+    @Override
+    public List<Product> getAllProductsSortedByName() {
+        return productRepository.findAll(Sort.by("name"));
+    }
+
+    @Override
+    public List<Product> getAllProductsSortedByPrice() {
+        return productRepository.findAll(Sort.by("price"));
+    }
+
+
 }
+

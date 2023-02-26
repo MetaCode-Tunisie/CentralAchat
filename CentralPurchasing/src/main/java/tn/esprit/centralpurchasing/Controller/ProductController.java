@@ -1,5 +1,6 @@
 package tn.esprit.centralpurchasing.Controller;
 
+import ch.qos.logback.core.status.Status;
 import lombok.AllArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import tn.esprit.centralpurchasing.Services.IServiceProduct;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @AllArgsConstructor
@@ -35,4 +37,31 @@ public class ProductController {
     public void updateProduct(Long idProduct, String Name){
         serviceProduct.updateProduct(idProduct,Name);
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Product>> searchProducts(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String adress,
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice
+            ) {
+        List<Product> products = serviceProduct.searchProducts(name, adress, minPrice, maxPrice);
+        return ResponseEntity.ok(products);
+    }
+
+    @GetMapping("/stats")
+    public ResponseEntity<Map<String, Long>> getProductCountsByStatus() {
+        Map<String, Long> counts = serviceProduct.getProductCountsByStatus();
+        return ResponseEntity.ok(counts);
+    }
+    @GetMapping("/sortedByName")
+    public List<Product> getAllProductsSortedByName() {
+        return serviceProduct.getAllProductsSortedByName();
+    }
+
+    @GetMapping("/sortedByPrice")
+    public List<Product> getAllProductsSortedByPrice() {
+        return serviceProduct.getAllProductsSortedByPrice();
+    }
+
 }
