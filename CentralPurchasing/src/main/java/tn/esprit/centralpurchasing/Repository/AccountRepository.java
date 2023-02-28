@@ -7,9 +7,11 @@ import tn.esprit.centralpurchasing.Entities.TypeRole;
 public interface AccountRepository extends JpaRepository<Account, Long> {
 
     Account findByEmail(String email);
+    Account findByEmailAndCodeTel(String email,String codetel);
+    Account findByPhoneNumberAndCodeTel(String numTel,String codetel);
 
-    Account findByRolesTypeRole(TypeRole typeRole);
-
+    Account findByResetToken(String resetToken);
+    Account findByPhoneNumber(String numTel);
     Account findByIdAccountAndRolesTypeRole(Long idAccount,TypeRole typeRole);
 
 }

@@ -10,8 +10,7 @@ import lombok.experimental.FieldDefaults;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Getter
@@ -25,29 +24,26 @@ public class Account implements Serializable {
     String firstname;
     String lastname;
     String photo;
+    String phoneNumber;
 
+    // reset password
+    String codeTel;
+    String resetToken;
 
-
+    // username and password
     @NotEmpty
     String email;
     @NotEmpty
     String password;
+
+
+    // setings of account
     Boolean isAccountNonLocked=true;
     Boolean isAccountNonExpired=true;
     Boolean isCredentialsNonExpired=true;
-    Boolean isEnabled=true;
+    Boolean isEnabled=false;
+    String activateCode;
 
-
-    @JsonIgnore @ManyToOne
-    Account anyaccount_to_admin;
-
-/*
-    @JsonIgnore @ManyToOne
-    Account operators_to_admin;
-
-    @JsonIgnore @ManyToOne
-    Account suppliers_to_admin ;
- */
 
 
 
@@ -57,8 +53,11 @@ public class Account implements Serializable {
     @JsonIgnore @ManyToMany
     Set<Account> suppliers_buyers;
 
-    @JsonIgnore @ManyToMany
-    Set <Role> roles= new HashSet<>();
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.EAGER, targetEntity = Role.class, cascade = CascadeType.ALL )
+    @JoinTable(name = "user_roles", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = {
+            @JoinColumn(name = "role_id") })
+    private Set<Role> roles = new HashSet<>();
 
     @JsonIgnore @OneToMany
     Set<Orders> orders=new HashSet<>();
@@ -81,5 +80,7 @@ public class Account implements Serializable {
     @JsonIgnore
     @OneToMany(mappedBy = "account")
     Set<RequestForProposal> requestForProposals =new HashSet<>();
+
+
 
 }

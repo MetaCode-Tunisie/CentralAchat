@@ -6,5 +6,4 @@ import tn.esprit.centralpurchasing.Entities.TypeRole;
 
 public interface RoleRepository extends JpaRepository<Role,Long> {
     Role findByTypeRole(TypeRole typeRole);
-
 }

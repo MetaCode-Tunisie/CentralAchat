@@ -1,12 +1,15 @@
 package tn.esprit.centralpurchasing.Util;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import tn.esprit.centralpurchasing.Entities.Account;
 import tn.esprit.centralpurchasing.Services.IServiceAccount;
 import tn.esprit.centralpurchasing.Services.IServiceRole;
+
+import java.time.LocalDateTime;
+import java.util.Calendar;
+import java.util.Date;
 
 @Component @AllArgsConstructor
 public class FirstTimeInitializer implements CommandLineRunner {
@@ -29,6 +32,34 @@ public class FirstTimeInitializer implements CommandLineRunner {
         {
             iServiceRole.addRoles();
         }
+
+        //Date dateSys = new Date();
+        //LocalDateTime.from(dateSys.toInstant()).plusDays(3);
+
+
+        /*
+        Calendar ac = Calendar.getInstance();
+        Date datesys=new Date();
+
+
+        ac.setTime(datesys);
+            datesys=ac.getTime();
+
+        Date dateOrder = new Date("23/02/2023");
+        Calendar c = Calendar.getInstance();
+        c.setTime(dateOrder);
+        c.add(Calendar.DATE,2);
+        dateOrder = c.getTime();
+
+        System.out.println("\n date order"+dateOrder+"\n"+"date System"+datesys);
+
+        if(datesys.before(dateOrder))
+        System.out.println("supprimer date ");
+
+*/
+
+
+
 
     }
 }

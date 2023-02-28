@@ -19,7 +19,11 @@ public class RequestForProposal implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY) @Setter(AccessLevel.NONE)
     Long idRequestForProposal;
     String description;
-    String photo;
+
+    @Lob
+    @Column(name = "Image")
+    private byte[] image;
+
 
     @ManyToOne
     Account account;

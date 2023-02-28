@@ -1,10 +1,10 @@
 package tn.esprit.centralpurchasing.Services;
 
+import tn.esprit.centralpurchasing.Dto.UserDto;
 import tn.esprit.centralpurchasing.Entities.Account;
-
 import java.util.List;
 
-public interface IServiceAccount {
+public interface IServiceAccount  {
 
     // ********************** ADMIN *********************** //
     Account SignUpAdmin(Account account);
@@ -12,12 +12,13 @@ public interface IServiceAccount {
 
     // ********************** OPERATOR *********************** //
     Account addOperator(Account account);
-    Account updateOperator(Account account);
+    Boolean updateOperator(UserDto account);
 
     // ********************** SUPPLIER *********************** //
     Account addSupplier(Account account);
+    Boolean updateSupplier(UserDto userDto);
     Account affectSupplierToOperator(Long idOperator,Long idSupplier);
-    Account disaffectSupplierToOperator(Long idSupplier);
+    Boolean disaffectSupplierToOperator(String email);
 
 
 
@@ -25,8 +26,8 @@ public interface IServiceAccount {
 
     // ********************** BUYER *********************** //
     Account SignUp(Account account);
-    Account updateBuyer(Account account);
-    Account disableBuyer(Long idBuyer);
+    Boolean updateBuyer(UserDto userDto);
+
     Account affectBuyerToSupplier(Long idSupplier,Long idBuyer);
 
 
@@ -34,7 +35,12 @@ public interface IServiceAccount {
 
 
 
+
+    Boolean disableAccount(UserDto userDto);
+
     List<Account> getAll();
 
-    Account loadUserByUsername(String username);
+    Boolean changePassword(String identifiant,String code,String newpassword);
+
+
 }

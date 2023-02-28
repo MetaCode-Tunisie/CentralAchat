@@ -22,11 +22,7 @@ public class Role implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) @Setter(AccessLevel.NONE)
     Long idRole;
+    @Enumerated(EnumType.STRING)
     TypeRole typeRole;
-
-    @ManyToMany(mappedBy = "roles")
-    Set<Account> accounts = new HashSet<>();
-
-
 
 }

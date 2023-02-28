@@ -1,26 +1,23 @@
 package tn.esprit.centralpurchasing.Services;
 
 import lombok.AllArgsConstructor;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import tn.esprit.centralpurchasing.Dto.UserDto;
 import tn.esprit.centralpurchasing.Entities.Account;
 import tn.esprit.centralpurchasing.Entities.Role;
 import tn.esprit.centralpurchasing.Entities.TypeRole;
 import tn.esprit.centralpurchasing.Repository.AccountRepository;
 import tn.esprit.centralpurchasing.Repository.RoleRepository;
 
-import java.util.List;
+import java.util.*;
 
 @Service @AllArgsConstructor
 public class ServiceAccount implements IServiceAccount{
     AccountRepository accountRepository;
     RoleRepository roleRepository;
-    @Bean
-    private PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
-    }
+
+    IServiceEmail serviceEmail;
 
 
     //************************************ BUYER *****************************************//
@@ -29,26 +26,37 @@ public class ServiceAccount implements IServiceAccount{
     {
         Role role= roleRepository.findByTypeRole(TypeRole.BUYER);
         account.getRoles().add(role);
-        account.setPassword(passwordEncoder().encode(account.getPassword()));
 
-        Account admin= accountRepository.findByRolesTypeRole(TypeRole.ADMIN);
-
-        account.setAnyaccount_to_admin(admin);
+        account.setPassword(new BCryptPasswordEncoder().encode(account.getPassword()));
 
         return accountRepository.save(account);
     }
 
     @Override
-    public Account updateBuyer(Account account) {
-        return null;
+    public Boolean updateBuyer(UserDto userDto) {
+        Account account=accountRepository.findByEmail(userDto.getEmail());
+        if(account==null)
+            return false;
+        if(!userDto.getPassword().equals(""))
+            account.setPassword(new BCryptPasswordEncoder().encode(userDto.getPassword()));
+        if(!userDto.getFirstname().equals(""))
+            account.setFirstname(userDto.getFirstname());
+        if(!userDto.getLastname().equals(""))
+            account.setFirstname(userDto.getLastname());
+        if(!userDto.getPhoneNumber().equals(""))
+            account.setPhoneNumber(userDto.getPhoneNumber());
+        accountRepository.save(account);
+        return true;
     }
 
     @Override
-    public Account disableBuyer(Long idBuyer) {
-        return accountRepository.findById(idBuyer).map(account1 -> {
-            account1.setIsEnabled(false);
-            return accountRepository.save(account1);
-        }).orElse(null);
+    public Boolean disableAccount(UserDto userDto) {
+        Account account=accountRepository.findByEmail(userDto.getEmail());
+        if(account==null)
+            return false;
+        account.setIsAccountNonLocked(false);
+        accountRepository.save(account);
+        return true;
     }
 
     @Override
@@ -69,7 +77,8 @@ public class ServiceAccount implements IServiceAccount{
     {
         Role role= roleRepository.findByTypeRole(TypeRole.ADMIN);
         account.getRoles().add(role);
-        account.setPassword(passwordEncoder().encode(account.getPassword()));
+        account.setPassword(new BCryptPasswordEncoder().encode(account.getPassword()));
+
         return accountRepository.save(account);
     }
 
@@ -88,18 +97,25 @@ public class ServiceAccount implements IServiceAccount{
     public Account addOperator(Account account) {
         Role role= roleRepository.findByTypeRole(TypeRole.OPERATOR);
         account.getRoles().add(role);
-        account.setPassword(passwordEncoder().encode(account.getPassword()));
-
-        Account admin= accountRepository.findByRolesTypeRole(TypeRole.ADMIN);
-
-        account.setAnyaccount_to_admin(admin);
-
+        account.setPassword(new BCryptPasswordEncoder().encode(account.getPassword()));
         return accountRepository.save(account);
     }
 
     @Override
-    public Account updateOperator(Account account) {
-        return null;
+    public Boolean updateOperator(UserDto userDto) {
+        Account account=accountRepository.findByEmail(userDto.getEmail());
+        if(account==null)
+            return false;
+        if(!userDto.getPassword().equals(""))
+            account.setPassword(new BCryptPasswordEncoder().encode(userDto.getPassword()));
+        if(!userDto.getFirstname().equals(""))
+            account.setFirstname(userDto.getFirstname());
+        if(!userDto.getLastname().equals(""))
+            account.setFirstname(userDto.getLastname());
+        if(!userDto.getPhoneNumber().equals(""))
+            account.setPhoneNumber(userDto.getPhoneNumber());
+        accountRepository.save(account);
+        return true;
     }
 
     //************************************ SUPPLIER *****************************************//
@@ -107,13 +123,26 @@ public class ServiceAccount implements IServiceAccount{
     public Account addSupplier(Account account) {
         Role role= roleRepository.findByTypeRole(TypeRole.SUPPLIER);
         account.getRoles().add(role);
-        account.setPassword(passwordEncoder().encode(account.getPassword()));
-
-        Account admin= accountRepository.findByRolesTypeRole(TypeRole.ADMIN);
-
-        account.setAnyaccount_to_admin(admin);
+        account.setPassword(new BCryptPasswordEncoder().encode(account.getPassword()));
 
         return accountRepository.save(account);
+    }
+
+    @Override
+    public Boolean updateSupplier(UserDto userDto) {
+        Account account=accountRepository.findByEmail(userDto.getEmail());
+        if(account==null)
+            return false;
+        if(!userDto.getPassword().equals(""))
+            account.setPassword(new BCryptPasswordEncoder().encode(userDto.getPassword()));
+        if(!userDto.getFirstname().equals(""))
+            account.setFirstname(userDto.getFirstname());
+        if(!userDto.getLastname().equals(""))
+            account.setFirstname(userDto.getLastname());
+        if(!userDto.getPhoneNumber().equals(""))
+            account.setPhoneNumber(userDto.getPhoneNumber());
+        accountRepository.save(account);
+        return true;
     }
 
     @Override
@@ -132,11 +161,13 @@ public class ServiceAccount implements IServiceAccount{
     }
 
     @Override
-    public Account disaffectSupplierToOperator(Long idSupplier) {
-        return accountRepository.findById(idSupplier).map(supplier -> {
-            supplier.setSuppliers_to_operator(null);
-            return accountRepository.save(supplier);
-        }).orElse(null);
+    public Boolean disaffectSupplierToOperator(String email) {
+        Account supplier= accountRepository.findByEmail(email);
+        if(supplier==null)
+            return false;
+        supplier.setSuppliers_to_operator(null);
+        accountRepository.save(supplier);
+        return true;
     }
 
 
@@ -154,12 +185,43 @@ public class ServiceAccount implements IServiceAccount{
         return accountRepository.findAll();
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     @Override
-    public Account loadUserByUsername(String username) {
-        return accountRepository.findByEmail(username);
+    public Boolean changePassword(String identifiant,String code,String newpassword) {
+
+        Account account= accountRepository.findByPhoneNumberAndCodeTel(identifiant,code);
+        if(account==null)
+            account=accountRepository.findByEmailAndCodeTel(identifiant,code);
+
+        if(account==null)
+            account=accountRepository.findByResetToken(code);
+
+        if(account==null)
+            return false;
+
+        account.setCodeTel(null);
+        account.setResetToken(null);
+        account.setPassword(new BCryptPasswordEncoder().encode(newpassword));
+        accountRepository.save(account);
+        return true;
     }
 
 
 
-
 }
+
