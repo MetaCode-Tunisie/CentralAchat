@@ -28,3 +28,5 @@ public class RequestForProposal implements Serializable {
     @ManyToOne
     Account account;
 }
+
+

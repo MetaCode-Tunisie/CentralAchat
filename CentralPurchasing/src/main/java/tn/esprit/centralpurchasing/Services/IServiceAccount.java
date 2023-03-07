@@ -1,10 +1,13 @@
 package tn.esprit.centralpurchasing.Services;
 
+import tn.esprit.centralpurchasing.Entities.Account;
 import tn.esprit.centralpurchasing.Dto.UserDto;
 import tn.esprit.centralpurchasing.Entities.Account;
 import java.util.List;
 
 public interface IServiceAccount  {
+
+    public Account SearchAccount(Long idAccount);
 
     // ********************** ADMIN *********************** //
     Account SignUpAdmin(Account account);

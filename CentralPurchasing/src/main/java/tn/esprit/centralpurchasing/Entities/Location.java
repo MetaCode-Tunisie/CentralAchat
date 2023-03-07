@@ -11,6 +11,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+
 @Entity
 @Getter
 @Setter
@@ -26,3 +27,4 @@ public class Location implements Serializable {
     @OneToMany(mappedBy = "location")
     Set<Product> products=new HashSet<>();
 }
+

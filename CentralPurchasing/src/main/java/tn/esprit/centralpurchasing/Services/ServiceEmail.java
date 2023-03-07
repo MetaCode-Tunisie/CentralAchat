@@ -24,7 +24,7 @@ public class ServiceEmail implements IServiceEmail{
         Account account= accountRepository.findByEmail(identifiant);
 
         if(account==null)
-            accountRepository.findByPhoneNumber(identifiant);
+            account=accountRepository.findByPhoneNumber(identifiant);
 
         if(account==null)
             return false;
@@ -32,7 +32,7 @@ public class ServiceEmail implements IServiceEmail{
         String token = UUID.randomUUID().toString();
         account.setResetToken(token);
 
-         setMessage(account.getEmail(),"Reset Password !",token);
+        setMessage(account.getEmail(),"Reset Password !",token);
         accountRepository.save(account);
 
         return true;

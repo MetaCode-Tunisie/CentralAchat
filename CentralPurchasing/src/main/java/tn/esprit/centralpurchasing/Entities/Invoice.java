@@ -25,3 +25,4 @@ public class Invoice {
     @OneToOne(mappedBy = "invoice")
     Orders order;
 }
+

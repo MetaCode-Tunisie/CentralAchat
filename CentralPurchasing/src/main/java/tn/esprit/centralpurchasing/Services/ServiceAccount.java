@@ -1,15 +1,16 @@
 package tn.esprit.centralpurchasing.Services;
 
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
+import tn.esprit.centralpurchasing.Entities.Account;
+import tn.esprit.centralpurchasing.Repository.AccountRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import tn.esprit.centralpurchasing.Dto.UserDto;
-import tn.esprit.centralpurchasing.Entities.Account;
 import tn.esprit.centralpurchasing.Entities.Role;
 import tn.esprit.centralpurchasing.Entities.TypeRole;
 import tn.esprit.centralpurchasing.Repository.AccountRepository;
 import tn.esprit.centralpurchasing.Repository.RoleRepository;
-
 import java.util.*;
 
 @Service @AllArgsConstructor
@@ -18,8 +19,10 @@ public class ServiceAccount implements IServiceAccount{
     RoleRepository roleRepository;
 
     IServiceEmail serviceEmail;
-
-
+    @Override
+    public Account SearchAccount(Long idAccount) {
+        return accountRepository.findById(idAccount).orElse(null);
+    }
     //************************************ BUYER *****************************************//
     @Override
     public Account SignUp(Account account)
@@ -224,4 +227,3 @@ public class ServiceAccount implements IServiceAccount{
 
 
 }
-

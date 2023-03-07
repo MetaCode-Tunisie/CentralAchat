@@ -18,6 +18,7 @@ import java.util.*;
 @ToString
 @FieldDefaults(level= AccessLevel.PRIVATE)
 public class Account implements Serializable {
+    @JsonIgnore
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) @Setter(AccessLevel.NONE)
     Long idAccount;
@@ -27,7 +28,9 @@ public class Account implements Serializable {
     String phoneNumber;
 
     // reset password
+    @JsonIgnore
     String codeTel;
+    @JsonIgnore
     String resetToken;
 
     // username and password
@@ -38,10 +41,15 @@ public class Account implements Serializable {
 
 
     // setings of account
+    @JsonIgnore
     Boolean isAccountNonLocked=true;
+    @JsonIgnore
     Boolean isAccountNonExpired=true;
+    @JsonIgnore
     Boolean isCredentialsNonExpired=true;
+    @JsonIgnore
     Boolean isEnabled=false;
+    @JsonIgnore
     String activateCode;
 
 
@@ -59,26 +67,20 @@ public class Account implements Serializable {
             @JoinColumn(name = "role_id") })
     private Set<Role> roles = new HashSet<>();
 
-    @JsonIgnore @OneToMany
+    @OneToMany @JsonIgnore
     Set<Orders> orders=new HashSet<>();
 
-    @JsonIgnore
 
-    @OneToMany(mappedBy = "account")
-    Set<Cart> carts=new HashSet<>();
 
-    @JsonIgnore
-
-    @ManyToOne
+    @ManyToOne @JsonIgnore
     Currency currency;
 
-    @JsonIgnore
 
-    @OneToMany(mappedBy = "account")
+    @OneToMany(mappedBy = "account") @JsonIgnore
     Set<Product> products=new HashSet<>();
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "account")
+
+    @OneToMany(mappedBy = "account") @JsonIgnore
     Set<RequestForProposal> requestForProposals =new HashSet<>();
 
 
