@@ -1,18 +1,18 @@
 package tn.esprit.centralpurchasing.Services;
 
+import com.twilio.rest.api.v2010.account.Message;
+import com.twilio.type.PhoneNumber;
 import lombok.AllArgsConstructor;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.stereotype.Service;
-import tn.esprit.centralpurchasing.Entities.Cart;
-import tn.esprit.centralpurchasing.Entities.Delivery;
-import tn.esprit.centralpurchasing.Entities.Orders;
-import tn.esprit.centralpurchasing.Entities.Reciept;
+import tn.esprit.centralpurchasing.Config.TwilioConfig;
+import tn.esprit.centralpurchasing.Entities.*;
+import tn.esprit.centralpurchasing.Repository.AccountRepository;
 import tn.esprit.centralpurchasing.Repository.DeliveryRepository;
 import tn.esprit.centralpurchasing.Repository.OrdersRepository;
 import tn.esprit.centralpurchasing.Repository.RecieptRepository;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -20,17 +20,35 @@ public class ServiceDelivery implements IServiceDelivery{
     private DeliveryRepository deliveryRepository;
     private RecieptRepository recieptRepository;
     private OrdersRepository ordersRepository;
-    @Override
-    public Delivery addDelivery(Long idOrders, String destinationAddress) {
-        Orders orders = ordersRepository.findById(idOrders).orElse(null);
-        Delivery delivery = new Delivery();
-      Cart cart = orders.getCarts().stream().findFirst().orElse(null);
-            delivery.setDepartureAddress(cart.getProduct().getLocation().getAddress());
-        //delivery.setDepartureAddress("tunis");
-        delivery.setDestinationAddress(destinationAddress);
-        delivery.setOrders(orders);
-        return deliveryRepository.save(delivery);
-        }
+    private AccountRepository accountRepository;
+    private TwilioConfig twilioConfig;
+
+
+
+     @Override
+    public void add(String destinationAddress, Long idAccount) {
+
+         List<Orders> orders=ordersRepository.findByValidAndAccountsIdAccount(true,idAccount);
+
+         for (Orders order : orders){
+
+             if(order.getDelivery()==null && order.getDeliveryOption()==true && order.getPayment()==true) {
+                 Delivery delivery = new Delivery();
+                 delivery.setDestinationAddress(destinationAddress);
+                 delivery.setDepartureAddress(order.getProduct().getLocation().getAddress());
+                 for (Orders ordersCheck : orders) {
+                     if (ordersCheck.getDelivery()==null){
+                         if(order.getProduct().getLocation().equals(ordersCheck.getProduct().getLocation()))
+                         {
+                             ordersCheck.setDelivery(delivery);
+                         }
+                     }
+                 }
+                 deliveryRepository.save(delivery);
+             }
+         }
+
+    }
 
 
 
@@ -45,26 +63,46 @@ public class ServiceDelivery implements IServiceDelivery{
         return deliveryRepository.findById(id).orElse(null);
     }
 
-   /* @Override
-    public void affectRecieptToDelivery(Long idReciept, Long idDelivery) {
 
-        Reciept reciept = recieptRepository.findById(idReciept).orElse(null);
+    @Override
+    public Map<String, Boolean> suivie(Long idDelivery, Long idAccount) {
+        Map<String, Boolean> suivie = new HashMap<>();
         Delivery delivery = deliveryRepository.findById(idDelivery).orElse(null);
-        delivery.setReciept(reciept);
-        deliveryRepository.save(delivery);
-    }*/
+        Account account = accountRepository.findById(idAccount).orElse(null);
+        PhoneNumber to = new PhoneNumber(account.getPhoneNumber());
+        PhoneNumber from = new PhoneNumber(twilioConfig.getTrialNumber());
+        String m = "Dear M/Ms "+account.getLastname()+",we have sent you this message to inform you that your order has been delivered thank you for your loyalty";
+        List<Orders> orders = ordersRepository.findByDeliveryIdDelivery(idDelivery);
+        if(orders.get(0).getDeliveryOption()==true){
+            suivie.put("picked" , true);
+            if(orders.get(0).getPayment()==true){
+                suivie.put("assort",true);
+                if(delivered(orders.get(0).getIdOrder())){
+                    suivie.put("delivered" , true);
+                   // Message message = Message
+                     //       .creator(to,from,m).create();
+                    Reciept reciept=recieptRepository.findByDeliveryIdDelivery(idDelivery);
+                    if(reciept!=null ){
+                        if(reciept.getStatus()==true)
+                        suivie.put("completed",true);
+                    }
+                }
 
-    /*@Override
-    public List<Integer> suivie(Long idDelivery) {
-        List<Integer> etat = new ArrayList<>();
-        Orders orders = ordersRepository.findByDeliveryIdDelivery(idDelivery);
-        if(orders.getPayment()== true){
-            etat.add(1);
-
-            if(recieptRepository.findByDeliveryIdDelivery(idDelivery).getStatus()==true){
-                etat.add(1);
             }
         }
-        return etat;
-    }*/
+
+
+        return suivie;
+    }
+
+    public Boolean delivered(Long idOrder){
+        Boolean status = false;
+        Orders orders = ordersRepository.findById(idOrder).orElse(null);
+        if(orders.getDelivery() != null)
+            status = true;
+        return status;
+    }
+
+
+
 }

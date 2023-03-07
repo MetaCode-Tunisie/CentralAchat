@@ -7,7 +7,6 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Date;
 
 @Entity
@@ -15,22 +14,15 @@ import java.util.Date;
 @Setter
 @ToString
 @FieldDefaults(level= AccessLevel.PRIVATE)
-public class Cart implements Serializable {
+public class Invoice {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) @Setter(AccessLevel.NONE)
-    Long idCart;
-    int quantity;
+    Long idFacture;
     @Temporal(TemporalType.DATE)
-    Date dateCreation;
-    Boolean valid;
-
-    @ManyToOne
-    Account account;
-
-    @ManyToOne
-    Product product;
-
-    @ManyToOne
+    Date FactureDate = new Date();
+    Double Totalprice;
+    @OneToOne(mappedBy = "invoice")
     Orders order;
 }
+

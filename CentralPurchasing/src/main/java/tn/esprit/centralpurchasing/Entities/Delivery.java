@@ -9,12 +9,9 @@ import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-
 @Entity
 @Getter
 @Setter
@@ -28,12 +25,14 @@ public class Delivery implements Serializable {
     Date dateDelivery = new Date() ;
     String departureAddress;
     String destinationAddress;
+    Double price;
+
 
     @JsonIgnore
     @OneToOne(mappedBy = "delivery")
     Reciept reciept;
     @JsonIgnore
-    @OneToOne
-    Orders orders;
+    @OneToMany(mappedBy = "delivery")
+    Set<Orders> orders = new HashSet<>();
 
 }

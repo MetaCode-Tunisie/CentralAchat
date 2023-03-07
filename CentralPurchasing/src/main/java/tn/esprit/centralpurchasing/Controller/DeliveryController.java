@@ -7,16 +7,18 @@ import tn.esprit.centralpurchasing.Entities.Delivery;
 import tn.esprit.centralpurchasing.Services.IServiceDelivery;
 
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 @RestController
 @AllArgsConstructor
 public class DeliveryController {
     private IServiceDelivery iServiceDelivery;
 
-    @PostMapping("/addDelivery")
+    /*@PostMapping("/addDelivery")
     public Delivery addDelivery(Long idOrders, String destinationAddress){
         return  iServiceDelivery.addDelivery(idOrders, destinationAddress);
-    }
+    }*/
 
     @GetMapping("/getAllDeliveries")
     public List<Delivery> getAllDeliveries(){
@@ -32,4 +34,16 @@ public class DeliveryController {
     public void affectRecieptToDelivery(@PathVariable Long idReciept,@PathVariable Long idDelivery){
         iServiceDelivery.affectRecieptToDelivery(idReciept,idDelivery);
     }*/
+
+    @PostMapping("add/{destinationAddress}/{idAccount}")
+    public void  add(@PathVariable String destinationAddress,@PathVariable Long idAccount){
+        iServiceDelivery.add(destinationAddress,idAccount);
+    }
+
+        @GetMapping("/suivie/{idDelivery}/{idAccount}")
+        public Map<String, Boolean> suivie(@PathVariable Long idDelivery,@PathVariable Long idAccount){
+        return iServiceDelivery.suivie(idDelivery, idAccount);
+    }
+
+
 }
