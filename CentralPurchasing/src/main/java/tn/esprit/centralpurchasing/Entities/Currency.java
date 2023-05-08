@@ -1,5 +1,6 @@
 package tn.esprit.centralpurchasing.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,6 +24,7 @@ public class Currency implements Serializable {
     String name;
     float rate;
 
+@JsonIgnore
     @OneToMany(mappedBy = "currency")
     Set<Account> accounts=new HashSet<>();
 }

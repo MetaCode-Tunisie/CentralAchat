@@ -1,5 +1,6 @@
 package tn.esprit.centralpurchasing.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,8 +21,10 @@ public class Location implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) @Setter(AccessLevel.NONE)
     Long idLocation;
-    String Address;
 
+    String Address;
+    @JsonIgnore
     @OneToMany(mappedBy = "location")
     Set<Product> products=new HashSet<>();
 }
+

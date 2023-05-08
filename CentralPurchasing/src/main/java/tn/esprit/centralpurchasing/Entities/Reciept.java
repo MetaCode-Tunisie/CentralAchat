@@ -19,7 +19,7 @@ public class Reciept implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) @Setter(AccessLevel.NONE)
     Long idReciept;
-    Boolean status;
+    Boolean status = true;
 
     @JsonIgnore
     @OneToOne

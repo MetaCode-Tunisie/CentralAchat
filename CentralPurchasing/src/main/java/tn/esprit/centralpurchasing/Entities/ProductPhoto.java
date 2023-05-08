@@ -18,7 +18,15 @@ public class ProductPhoto implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) @Setter(AccessLevel.NONE)
     Long idProductPhoto;
-    String url;
-    @ManyToOne
+    @Lob
+    String name;
+    @ManyToOne(cascade = CascadeType.ALL)
     Product product;
+    // constructeurs, getters et setters
+
+
+
+
+
+
 }

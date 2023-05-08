@@ -7,21 +7,25 @@ import tn.esprit.centralpurchasing.Services.IServiceReciept;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @AllArgsConstructor
 public class RecieptController {
     private IServiceReciept iServiceReciept;
 
-    @PostMapping("/addReciept/{idDelivery}")
-    public Reciept addReciept(Reciept reciept, @PathVariable Long idDelivery){
-        return iServiceReciept.addReciept(reciept,idDelivery);
+    // http://localhost:8585/addReciept
+    @GetMapping ("/addReciept/{idDelivery}")
+    public void addReciept(@PathVariable Long idDelivery){
+         iServiceReciept.addReciept(idDelivery);
     }
 
+    // http://localhost:8585/getAllReciepts
     @GetMapping("/getAllReciepts")
     public List<Reciept> getAllReciepts(){
         return  iServiceReciept.getAllReciepts();
     }
 
+    // http://localhost:8585/searchReciept
     @GetMapping("/searchReciept/{idReciept}")
     public Reciept searchReciept(@PathVariable Long idReciept){
         return iServiceReciept.searchReciept(idReciept);

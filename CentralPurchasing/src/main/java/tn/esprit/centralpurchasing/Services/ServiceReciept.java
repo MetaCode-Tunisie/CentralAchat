@@ -15,12 +15,14 @@ public class ServiceReciept implements IServiceReciept{
     private RecieptRepository recieptRepository;
     private DeliveryRepository deliveryRepository;
     @Override
-    public Reciept addReciept(Reciept reciept, Long idDelivery) {
+    public Reciept addReciept( Long idDelivery) {
         /*Delivery delivery = deliveryRepository.findById(idDelivery).orElse(null);
         delivery.setReciept(reciept);
         return recieptRepository.save(reciept);*/
 
+        Reciept reciept = new Reciept();
         Delivery delivery = deliveryRepository.findById(idDelivery).orElse(null);
+        reciept.setStatus(true);
         reciept.setDelivery(delivery);
         return recieptRepository.save(reciept);
 

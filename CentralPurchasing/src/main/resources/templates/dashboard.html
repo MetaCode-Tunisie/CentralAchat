@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div>
+    <form action="#" th:action="@{/dashboard}" method="get">
+        <input type="text" name="search" placeholder="Search country" value="" />
+        <button type="submit">Search</button>
+    </form>
+    <canvas id="myChart"></canvas>
+    <div>
+        <ul>
+            <li th:each="dashboardData : ${dashboardDataList}">
+                <span th:text="${dashboardData.country}"></span>: <span th:text="${dashboardData.numCities}"></span> cities, <span th:text="${dashboardData.visits}"></span> visits
+            </li>
+        </ul>
+    </div>
+</div>
+<script th:inline="javascript">
+    var data = [[${dashboardDataList}]];
+    var countries = [];
+    var numCities = [];
+
+    for (var i = 0; i < data.length; i++) {
+        countries.push(data[i].country);
+        numCities.push(data[i].numCities);
+    }
+
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: countries,
+            datasets: [{
+                label: 'Number of Cities',
+                data: numCities,
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+
+</script>
+</body>
+</html>

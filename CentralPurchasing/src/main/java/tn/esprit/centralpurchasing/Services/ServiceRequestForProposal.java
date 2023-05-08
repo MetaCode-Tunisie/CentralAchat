@@ -2,25 +2,46 @@ package tn.esprit.centralpurchasing.Services;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 import tn.esprit.centralpurchasing.Entities.Account;
 import tn.esprit.centralpurchasing.Entities.RequestForProposal;
 import tn.esprit.centralpurchasing.Repository.AccountRepository;
 import tn.esprit.centralpurchasing.Repository.RequestForProposalRepository;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Base64;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
 public class ServiceRequestForProposal implements IServiceRequestForProposal {
     private RequestForProposalRepository requestForProposalRepository;
     private AccountRepository accountRepository;
-    @Override
-    public RequestForProposal addRequestForProposal(RequestForProposal requestForProposal, Long idAccount) {
-        Account account = accountRepository.findById(idAccount).orElse(null);
-        requestForProposal.setAccount(account);
 
+
+
+    @Override
+    public RequestForProposal addRequestForProposal(MultipartFile image, Long idAccount , String description) throws IOException {
+        Account account = accountRepository.findById(idAccount).orElse(null);
+        RequestForProposal requestForProposal = new RequestForProposal();
+        String filename = StringUtils.cleanPath(image.getOriginalFilename());
+        if (filename.contains("..")) {
+            System.out.println("!!! Not a valid File");
+        }
+        requestForProposal.setImage(Base64.getEncoder().encodeToString(image.getBytes()));
+        requestForProposal.setDescription(description);
+        requestForProposal.setAccount(account);
         return requestForProposalRepository.save(requestForProposal);
+
     }
+
+
 
     @Override
     public List<RequestForProposal> findAllRequests() {
@@ -33,15 +54,19 @@ public class ServiceRequestForProposal implements IServiceRequestForProposal {
     }
 
     @Override
-    public RequestForProposal updateRequest(RequestForProposal requestForProposal) {
+    public RequestForProposal updateRequestForProposal(MultipartFile image, Long idAccount , String description, Long idrequest) throws IOException {
 
-        return requestForProposalRepository.findById(requestForProposal.getIdRequestForProposal())
-                .map(requestForProposal1 -> {
-                    requestForProposal1.setDescription(requestForProposal.getDescription());
-                    requestForProposal1.setPhoto(requestForProposal.getPhoto());
-                    return requestForProposalRepository.save(requestForProposal1);
-                })
-                .orElse(null);
+            Account account = accountRepository.findById(idAccount).orElse(null);
+            RequestForProposal requestForProposal = requestForProposalRepository.findById(idrequest).orElse(null);
+            String filename = StringUtils.cleanPath(image.getOriginalFilename());
+            if (filename.contains("..")) {
+                System.out.println("!!! Not a valid File");
+            }
+            requestForProposal.setImage(Base64.getEncoder().encodeToString(image.getBytes()));
+            requestForProposal.setDescription(description);
+            requestForProposal.setAccount(account);
+            return requestForProposalRepository.save(requestForProposal);
+
     }
 
     @Override
@@ -50,13 +75,4 @@ public class ServiceRequestForProposal implements IServiceRequestForProposal {
         requestForProposalRepository.deleteById(idRequest);
     }
 
-
-
-   /* @Override
-    public void affectUserToProposalRequest(Long idUser, Long idRequest) {
-        RequestForProposal requestForProposal = requestForProposalRepository.findById(idRequest).orElse(null);
-        Account account = accountRepository.findById(idUser).orElse(null);
-        requestForProposal.setAccount(account);
-        requestForProposalRepository.save(requestForProposal);
-    }*/
 }

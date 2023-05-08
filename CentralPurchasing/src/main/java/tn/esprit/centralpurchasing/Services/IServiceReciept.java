@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface IServiceReciept {
 
-    public Reciept addReciept(Reciept reciept, Long idDelivery);
+    public Reciept addReciept( Long idDelivery);
 
     public List<Reciept> getAllReciepts();
 
