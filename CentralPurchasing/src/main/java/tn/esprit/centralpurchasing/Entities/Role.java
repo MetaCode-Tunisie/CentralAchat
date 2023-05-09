@@ -1,5 +1,6 @@
 package tn.esprit.centralpurchasing.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,11 +22,7 @@ public class Role implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) @Setter(AccessLevel.NONE)
     Long idRole;
+    @Enumerated(EnumType.STRING)
     TypeRole typeRole;
-
-    @ManyToMany
-    Set<Account> accounts = new HashSet<>();
-
-
 
 }

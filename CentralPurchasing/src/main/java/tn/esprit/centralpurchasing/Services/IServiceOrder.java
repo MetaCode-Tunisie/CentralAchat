@@ -6,9 +6,11 @@ import tn.esprit.centralpurchasing.Entities.Orders;
 import java.util.List;
 
 public interface IServiceOrder {
-    Orders AddOrder (Orders o );
-    Orders UpdateOrder (Orders o );
-    void DeleteOrder(Long id );
-    List<Orders> AfficherOrder ();
+
+    public Orders UpdateOrder( Long idOrder,int quantity);
+    public void  ChekedValid(Long idAccount,Boolean delivery);
+    public List<Orders> AfficherOrder(Long idAccount );
+    public Orders AjouterCommecart(Long idProduct , int quantity, Long idAccount);
+    public List<Orders> Affichercart(Long idAccount );
 
 }

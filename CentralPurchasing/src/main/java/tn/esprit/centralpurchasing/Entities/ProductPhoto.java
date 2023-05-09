@@ -1,5 +1,6 @@
 package tn.esprit.centralpurchasing.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,7 +19,16 @@ public class ProductPhoto implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) @Setter(AccessLevel.NONE)
     Long idProductPhoto;
-    String url;
-    @ManyToOne
+    @Lob
+    String name;
+    @ManyToOne(cascade = CascadeType.ALL)
+            @JsonIgnore
     Product product;
+    // constructeurs, getters et setters
+
+
+
+
+
+
 }
