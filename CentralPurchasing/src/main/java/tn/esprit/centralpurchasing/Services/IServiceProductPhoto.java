@@ -2,17 +2,16 @@ package tn.esprit.centralpurchasing.Services;
 
 import org.springframework.web.multipart.MultipartFile;
 import tn.esprit.centralpurchasing.Entities.ProductPhoto;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.List;
 
 public interface IServiceProductPhoto {
-    public void addProductPhoto(String name, String imagePath,Long idProduct) throws IOException;
-    public void updateProductPhoto(Long idProductPhoto, String name, String imagePath) throws IOException;
+  public ProductPhoto addProductPhoto(MultipartFile image, Long idProduct) throws IOException;
+ //**************************************
+ public ProductPhoto UpdateProductPhoto(MultipartFile image, Long idProduct ,Long idProductPhoto) throws IOException;
     public List<ProductPhoto> retrieveAllPhoto();
     void deleteProductPhoto(Long idProductPhoto,String name);
-
-
+   // public void addProductPhoto(String name, String imagePath, Long productId) throws IOException;
+   //public void saveProductPhoto(ProductPhoto productPhoto) throws IOException;
 }

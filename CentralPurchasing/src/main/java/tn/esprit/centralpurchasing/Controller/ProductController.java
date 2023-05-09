@@ -1,28 +1,29 @@
 package tn.esprit.centralpurchasing.Controller;
 
-import ch.qos.logback.core.status.Status;
+import com.google.zxing.WriterException;
 import lombok.AllArgsConstructor;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import tn.esprit.centralpurchasing.Entities.Category;
 import tn.esprit.centralpurchasing.Entities.Product;
-import tn.esprit.centralpurchasing.Repository.ProductRepository;
+import tn.esprit.centralpurchasing.Entities.researches;
 import tn.esprit.centralpurchasing.Services.IServiceProduct;
 
-import java.math.BigDecimal;
-import java.net.URI;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 @RestController
 @AllArgsConstructor
+@CrossOrigin(origins = "http://localhost:4200")
+
 public class ProductController {
     IServiceProduct serviceProduct;
     @PostMapping("/addProductAndCategoryAndlocation")
-    public Product addProduct(@RequestBody Product product, @RequestParam Long idCategory, @RequestParam Long idLocation, @RequestParam Long idUnit){
-        return serviceProduct.addProductWithCategoryAndLocation(idCategory,idLocation,product,idUnit);
+    public Product addProduct(@RequestParam Long idAccount, @RequestParam Long idCategory, @RequestParam Long idLocation, @RequestBody Product product, Long idUnit){
+
+        return serviceProduct.addProductWithCategoryAndLocation(idAccount,idCategory,idLocation,product,idUnit);
 
     }
     @GetMapping("/displayProducts")
@@ -48,6 +49,18 @@ public class ProductController {
         List<Product> products = serviceProduct.searchProducts(name, adress, minPrice, maxPrice);
         return ResponseEntity.ok(products);
     }
+    @GetMapping("/getByCatgory/{category}")
+    public List<Product> getproductCategory(
+            @PathVariable String category) {
+        List<Product> products = serviceProduct.retrieveAllProducts();
+        List<Product> result = new ArrayList<>();
+        for (Product i : products){
+            if(i.getCategory().getName().compareTo(category)==0 ){
+                result.add(i);
+            }
+        }
+        return result;
+    }
 
     @GetMapping("/stats")
     public ResponseEntity<Map<String, Long>> getProductCountsByStatus() {
@@ -62,6 +75,37 @@ public class ProductController {
     @GetMapping("/sortedByPrice")
     public List<Product> getAllProductsSortedByPrice() {
         return serviceProduct.getAllProductsSortedByPrice();
+    }
+//************************************************************************
+
+
+
+    @GetMapping("/{productId}/qrcode")
+    public void generateQRCode(@PathVariable Long productId, HttpServletResponse response) throws IOException, WriterException {
+        byte[] qrCode = serviceProduct.generateQRCode(productId);
+
+        response.setContentType("image/png");
+        response.getOutputStream().write(qrCode);
+    }
+    @GetMapping("/{productId}/similar")
+    public List<Product> getSimilarProducts(@PathVariable Long productId) {
+        return serviceProduct.getSimilarProducts(productId);
+    }
+//    @GetMapping("/latest/{accountId}")
+//    public ResponseEntity<List<Product>> getLatestProductsByAccount(@PathVariable Long accountId) {
+//        List<Product> latestProducts = serviceProduct.getLatestProductsByAccount(accountId);
+//        return ResponseEntity.ok(latestProducts);
+//    }
+
+
+    @PostMapping("/addResearch/{id_user}")
+    @ResponseBody
+    public researches addResearch(@PathVariable Long id_user, @RequestBody researches r) {
+        return serviceProduct.addResearch(id_user, r);
+    }
+    @GetMapping("/SuggestedProducts/{id_user}")
+    public List<Product> SuggestedProducts(@PathVariable Long id_user) {
+        return serviceProduct.SuggestedProducts(id_user);
     }
 
 }

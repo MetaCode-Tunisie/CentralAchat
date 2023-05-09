@@ -23,7 +23,8 @@ public class Location implements Serializable {
     Long idLocation;
 
     String Address;
-@JsonIgnore
+    @JsonIgnore
     @OneToMany(mappedBy = "location")
     Set<Product> products=new HashSet<>();
 }
+

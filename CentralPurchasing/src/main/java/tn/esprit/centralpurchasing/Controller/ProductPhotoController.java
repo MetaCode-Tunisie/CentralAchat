@@ -1,61 +1,40 @@
 package tn.esprit.centralpurchasing.Controller;
 
-import com.sun.deploy.nativesandbox.NativeSandboxBroker;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 import tn.esprit.centralpurchasing.Entities.ProductPhoto;
 import tn.esprit.centralpurchasing.Repository.ProductPhotoRepository;
+import tn.esprit.centralpurchasing.Services.ServiceProduct;
 import tn.esprit.centralpurchasing.Services.ServiceProductPhoto;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+
+import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/product-photo")
+@CrossOrigin(origins = "http://localhost:4200")
 public class ProductPhotoController {
     ServiceProductPhoto serviceProductPhoto;
     ProductPhotoRepository productPhotoRepository;
+ServiceProduct serviceProduct;
 
+    @PostMapping(path="/add/{idProduct}",consumes = {MULTIPART_FORM_DATA_VALUE})
+    public ProductPhoto addProductPhoto(@RequestParam MultipartFile file, @PathVariable Long idProduct) throws IOException {
 
-    @PostMapping("/add")
-    public ResponseEntity<?> addProductPhoto(@RequestParam String name, @RequestParam String imagePath, @RequestParam Long idProduct) {
-        try {
-            serviceProductPhoto.addProductPhoto(name, imagePath,idProduct);
-            return ResponseEntity.ok("Product photo added successfully");
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to add product photo");
-        }
+return serviceProductPhoto.addProductPhoto(file, idProduct);
 
+ }
+
+    @PostMapping(path="/update/{idProduct}/{idProductPhoto}",consumes = {MULTIPART_FORM_DATA_VALUE})
+    public ProductPhoto uppdateProductPhoto(@RequestParam MultipartFile file, @PathVariable Long idProduct, @PathVariable Long idProductPhoto) throws IOException {
+
+        return serviceProductPhoto.UpdateProductPhoto(file,idProduct,idProductPhoto);
 
     }
 
-    @PostMapping("/update/{idProductPhoto}")
-    public ResponseEntity<?> updateProductPhoto(@PathVariable Long idProductPhoto,
-                                                @RequestParam String name,
-                                                @RequestParam String imagePath) {
-        try {
-            serviceProductPhoto.updateProductPhoto(idProductPhoto, name, imagePath);
-            return ResponseEntity.ok("Product photo updated successfully");
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update product photo");
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
-    }
     @GetMapping("/all")
 public List<ProductPhoto> retrieveAllPhoto(){
         return serviceProductPhoto.retrieveAllPhoto();

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import tn.esprit.centralpurchasing.Entities.Category;
 import tn.esprit.centralpurchasing.Repository.CategoryRepository;
+import tn.esprit.centralpurchasing.Repository.ProductRepository;
 
 import java.util.List;
 
@@ -12,6 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ServiceCategory implements IServiceCategory{
     CategoryRepository categoryRepository;
+    ProductRepository productRepository;
 
     @Override
     public Category addCategory(Category category) {
@@ -40,6 +42,7 @@ public class ServiceCategory implements IServiceCategory{
         // Enregistrement de la catégorie modifiée
         categoryRepository.save(category);
     }
+
 
 
 }

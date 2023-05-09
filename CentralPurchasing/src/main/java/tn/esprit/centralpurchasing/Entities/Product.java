@@ -22,12 +22,14 @@ public class Product implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY) @Setter(AccessLevel.NONE)
     Long idProduct;
     String name;
-    String description;
-    double price;
+   public String description;
+    Double price;
     @Enumerated(EnumType.STRING)
-     status status ;
+    status status ;
     int quantity;
     String unitValue;
+    Double x;
+    Double y;
     String adress;
     @JsonIgnore
     @ManyToOne
@@ -38,12 +40,23 @@ public class Product implements Serializable {
     @JsonIgnore
     @ManyToOne
     Unit unit;
-    @JsonIgnore
+   // @JsonIgnore
     @ManyToOne
     Category category;
-@JsonIgnore
+
     @OneToMany(mappedBy = "product")
     Set<ProductPhoto> productPhotos=new HashSet<>();
 
+ public String generateQRCodeContent() {
+  StringBuilder sb = new StringBuilder();
+  sb.append("Name: ").append(this.name).append("\n");
+  sb.append("Description: ").append(this.description).append("\n");
+  sb.append("Price: ").append(this.price).append("\n");
+  sb.append("Status: ").append(this.status).append("\n");
+  sb.append("Quantity: ").append(this.quantity).append("\n");
+  sb.append("Unit Value: ").append(this.unitValue).append("\n");
+  sb.append("Address: ").append(this.adress).append("\n");
+  return sb.toString();
+ }
 
 }

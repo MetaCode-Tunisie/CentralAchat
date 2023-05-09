@@ -10,4 +10,5 @@ public interface IServiceCategory {
     List<Category> displayCategorys();
     public void updateCategory(Long idCategory, String Name);
 
+
 }

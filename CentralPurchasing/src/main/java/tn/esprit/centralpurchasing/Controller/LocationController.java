@@ -2,7 +2,6 @@ package tn.esprit.centralpurchasing.Controller;
 
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 import tn.esprit.centralpurchasing.Entities.Location;
 import tn.esprit.centralpurchasing.Services.IServiceLocation;
 
